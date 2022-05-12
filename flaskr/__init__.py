@@ -1,4 +1,5 @@
 import os
+from pickle import STACK_GLOBAL
 
 from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
@@ -14,6 +15,7 @@ def create_app(test_config=None):
     app.config.from_mapping(
         SECRET_KEY='dev',
         DATABASE=os.path.join(app.instance_path, 'flaskr.sqlite'),
+        STATIC_FOLDER = os.path.join('static', 'blog_photo'),
     )
 
     if test_config is None:
@@ -33,5 +35,5 @@ def create_app(test_config=None):
     @app.route('/')
     def index():
         return render_template("index.html")
-
+        
     return app
