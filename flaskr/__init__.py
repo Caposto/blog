@@ -5,8 +5,8 @@ from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
 
 # To run the application
-# FLASK_APP=flaskr
-# FLASK_ENV=development
+# set FLASK_APP=flaskr
+# set FLASK_ENV=development
 # flask run
 
 def create_app(test_config=None):
