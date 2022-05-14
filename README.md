@@ -15,3 +15,4 @@ Goals
 * Learn Basic Security Practices
 * Get comfortable using Git
 * Learn how python is used in web development
+* Learn how to write tests for web development
