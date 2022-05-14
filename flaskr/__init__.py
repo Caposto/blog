@@ -1,7 +1,7 @@
 import os
 from pickle import STACK_GLOBAL
 
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from flask_sqlalchemy import SQLAlchemy
 
 # To run the application
@@ -35,5 +35,12 @@ def create_app(test_config=None):
     @app.route('/')
     def index():
         return render_template("index.html")
-        
+
+    # Routes user to the blog page
+    # is url_for() method better?
+    @app.route('/blog')
+    def blog_index():
+        return render_template("blog.html")
+
     return app
+
