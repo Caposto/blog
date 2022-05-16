@@ -9,9 +9,8 @@
 <body>
     <p><b>Welcome to the BLOG</b></p>
     <div class="content">
-    <h1 style="text-align: center">Task Master</h1>
     {% if blog_posts|length < 1 %}
-    <h4 style="text-align: center">There are no tasks. Create one below!</h4>
+    <h4 style="text-align: center">There are no posts. Create one below!</h4>
     {% else %} 
 
     <table>
@@ -22,6 +21,7 @@
         </tr>
         {% for blog_post in blog_posts %}
             <tr>
+                <td>{{ blog_post.title }}</td>
                 <td>{{ blog_post.body }}</td>
                 <td>{{ blog_post.date_created.date() }}</td>
             </tr>
@@ -31,7 +31,8 @@
     <br>
 
     <form action="/" method="POST">
-        <input type="text" name="body" id="title">
+        <input type="text" name="title" id ="title">
+        <input type="text" name="body" id="body">
         <input type="submit" value="Add Post">
     </form>
 </body>
