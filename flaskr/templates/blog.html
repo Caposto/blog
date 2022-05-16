@@ -10,7 +10,7 @@
     <p><b>Welcome to the BLOG</b></p>
     <div class="content">
     <h1 style="text-align: center">Task Master</h1>
-    {% if posts|length < 1 %}
+    {% if blog_posts|length < 1 %}
     <h4 style="text-align: center">There are no tasks. Create one below!</h4>
     {% else %} 
 
@@ -20,10 +20,10 @@
             <th>Body</th>
             <th>Actions</th>
         </tr>
-        {% for post in posts %}
+        {% for blog_post in blog_posts %}
             <tr>
-                <td>{{ post.body }}</td>
-                <td>{{ post.date_created.date() }}</td>
+                <td>{{ blog_post.body }}</td>
+                <td>{{ blog_post.date_created.date() }}</td>
             </tr>
         {% endfor %}
     </table>

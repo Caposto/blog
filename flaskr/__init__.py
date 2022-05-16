@@ -1,25 +1,19 @@
-from asyncio import tasks
-import os
-from pickle import STACK_GLOBAL
-
 from flask import Flask, redirect, render_template, request
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
+
+# Import configuration modules
+from instance.config import DevelopmentConfig
 
 # To run the application
 # set FLASK_APP=flaskr
 # set FLASK_ENV=development
 # flask run
 
-app = Flask(__name__, instance_relative_config=True, static_url_path='/static')
-app.config.from_mapping(
-        SECRET_KEY='dev',
-        DATABASE=os.path.join(app.instance_path, 'flaskr.sqlite'),
-        SQLALCHEMY_TRACK_MODIFICATIONS = False,
-)
+app = Flask(__name__, instance_relative_config=True)
+app.config.from_object(DevelopmentConfig)
 
 # Setup Database with SQLAlchemy
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///blog.db'
 db = SQLAlchemy(app)
 db.create_all()
 # a simple page that says hello
@@ -33,7 +27,7 @@ def index():
 def blog_index():
     if request.method == 'POST':
         post_body = request.form['body']
-        new_post = Post(body=post_body)
+        new_post = blog_post(body=post_body)
 
         try:
             db.session.add(new_post)
@@ -42,11 +36,11 @@ def blog_index():
         except:
             return "There was an error uploading your post"
     else:
-        posts = Post.query.order_by(Post.date_created).all()
-        return render_template("blog.html", posts=posts)
+        blog_posts = blog_post.query.order_by(blog_post.date_created).all()
+        return render_template("blog.html", blog_posts=blog_posts)
 
 # Class representing a blog post
-class Post(db.Model):
+class blog_post(db.Model):
     title = db.Column(db.String(50), primary_key=True)
     body = db.Column(db.String(1000))
     date_created = db.Column(db.DateTime, default=datetime.utcnow)
