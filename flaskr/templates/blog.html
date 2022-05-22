@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <p><b>Welcome to the BLOG</b></p>
+    <div class="content">
+    {% if posts|length < 1 %}
+    <h4 style="text-align: center">There are no posts. Create one below!</h4>
+    {% else %} 
+
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Title</th>
+            <th>Body</th>
+            <th>Date Created</th>
+            <th>Actions</th>
+        </tr>
+        {% for post in posts %}
+            <tr>
+                <td>{{ post.id }}</td>
+                <td>{{ post.title }}</td>
+                <td>{{ post.content }}</td>
+                <td>{{ post.date_posted.date() }}</td>
+                <td>
+                    <a href="/delete_post/{{post.id}}">Delete</a> 
+                    <br>
+                    <a href="/edit_post/{{post.id}}">Edit</a>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+    {% endif %}
+    <br>
+
+    <form action="/add_post" method="POST">
+        <input type="text" name="title" id ="title">
+        <input type="text" name="body" id="body">
+        <input type="submit" value="Add Post">
+    </form>
+</body>
+</html>

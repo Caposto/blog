@@ -7,7 +7,9 @@
     <title>Document</title>
 </head>
 <body>
-    <p><b>Welcome. My name is Christian Apostol</b></p>
-    <a href="/blog">Blog</a>
+    <form action="/edit_post/{{post.id}}" method="POST">
+        <input type="text" name="body" id="body" value="{{post.content}}">
+        <input type="submit" value="Edit Post">
+    </form>
 </body>
 </html>

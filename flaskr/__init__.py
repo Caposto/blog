@@ -1,39 +1,84 @@
-import os
-from pickle import STACK_GLOBAL
-
-from flask import Flask, render_template
+from flask import Flask, redirect, render_template, request, url_for
 from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
 
-# To run the application
-# set FLASK_APP=flaskr
-# set FLASK_ENV=development
-# flask run
+# Import configuration modules
+from instance.config import DevelopmentConfig
 
-def create_app(test_config=None):
-    # create and configure the app
-    app = Flask(__name__, instance_relative_config=True, static_url_path='/static')
-    app.config.from_mapping(
-        SECRET_KEY='dev',
-        DATABASE=os.path.join(app.instance_path, 'flaskr.sqlite'),
-        STATIC_FOLDER = os.path.join('static', 'blog_photo'),
-    )
+app = Flask(__name__, instance_relative_config=True)
+app.config.from_object(DevelopmentConfig)
 
-    if test_config is None:
-        # load the instance config, if it exists, when not testing
-        app.config.from_pyfile('config.py', silent=True)
-    else:
-        # load the test config if passed in
-        app.config.from_mapping(test_config)
+# Initialize Database
+db = SQLAlchemy(app)
 
-    # ensure the instance folder exists
+@app.before_first_request
+def create_tables():
+    db.create_all()
+
+# Welcome Page
+@app.route('/')
+def index():
+    return render_template("index.html")
+
+# Class representing a blog post
+class Blogpost(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(50))
+    content = db.Column(db.Text)
+    date_posted = db.Column(db.DateTime)
+
+    def __init__(self, title, content, date_posted=datetime.now()):
+        self.title = title
+        self.content = content
+        self.date_posted = date_posted
+    
+
+# Routes user to the blog page
+@app.route('/blog')
+def blog_index():
+    posts = Blogpost.query.order_by(Blogpost.date_posted.desc()).all()
+    return render_template("blog.html", posts=posts)
+
+# Add a new blog post using information from html form
+@app.route('/add_post', methods=["POST"])
+def add_post():
+    title = request.form['title']
+    content = request.form['body']
+
+    new_post = Blogpost(title, content)
+
     try:
-        os.makedirs(app.instance_path)
-    except OSError:
-        pass
+        db.session.add(new_post)
+        db.session.commit()
+        return redirect(url_for('blog_index'))
+    except:
+        return "There was an error adding your post!"
 
-    # a simple page that says hello
-    @app.route('/')
-    def index():
-        return render_template("index.html")
-        
-    return app
+@app.route('/delete_post/<int:id>')
+def delete_post(id):
+    post_to_delete = Blogpost.query.get_or_404(id)
+
+    try:
+        db.session.delete(post_to_delete)
+        db.session.commit()
+        return redirect(url_for('blog_index'))
+    except:
+        return "There was an error deleting your post!"
+
+@app.route('/edit_post/<int:id>', methods = ["GET", "POST"])
+def edit_post(id):
+    post_to_edit = Blogpost.query.get_or_404(id)
+
+    if request.method == 'POST':
+        post_to_edit.content = request.form['body']
+
+        try:
+            db.session.commit()
+            return redirect(url_for('blog_index'))
+        except:
+            return 'There was an issue updating your task'
+    else:
+        return render_template('update.html', post=post_to_edit)
+
+if __name__ == "__main__":
+    app.run(debug=True)
