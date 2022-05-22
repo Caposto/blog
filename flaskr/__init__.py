@@ -65,5 +65,20 @@ def delete_post(id):
     except:
         return "There was an error deleting your post!"
 
+@app.route('/edit_post/<int:id>', methods = ["GET", "POST"])
+def edit_post(id):
+    post_to_edit = Blogpost.query.get_or_404(id)
+
+    if request.method == 'POST':
+        post_to_edit.content = request.form['body']
+
+        try:
+            db.session.commit()
+            return redirect(url_for('blog_index'))
+        except:
+            return 'There was an issue updating your task'
+    else:
+        return render_template('update.html', post=post_to_edit)
+
 if __name__ == "__main__":
     app.run(debug=True)
