@@ -34,22 +34,10 @@ class Blogpost(db.Model):
     
 
 # Routes user to the blog page
-@app.route('/blog', methods=['POST', 'GET'])
+@app.route('/blog')
 def blog_index():
-    if request.method == 'POST':
-        post_title = request.form['title']
-        post_body = request.form['body']
-        new_post = Blogpost(title=post_title, body=post_body)
-
-        try:
-            db.session.add(new_post)
-            db.session.commit()
-            return redirect('/blog')
-        except:
-            return "There was an error uploading your post"
-    else:
-        posts = Blogpost.query.order_by(Blogpost.date_posted.desc()).all()
-        return render_template("blog.html", posts=posts)
+    posts = Blogpost.query.order_by(Blogpost.date_posted.desc()).all()
+    return render_template("blog.html", posts=posts)
 
 # Add a new blog post using information from html form
 @app.route('/add_post', methods=["POST"])
@@ -59,15 +47,23 @@ def add_post():
 
     new_post = Blogpost(title, content)
 
-    db.session.add(new_post)
-    db.session.commit()
+    try:
+        db.session.add(new_post)
+        db.session.commit()
+        return redirect(url_for('blog_index'))
+    except:
+        return "There was an error adding your post!"
 
-    return redirect(url_for('blog_index'))
+@app.route('/delete_post/<int:id>')
+def delete_post(id):
+    post_to_delete = Blogpost.query.get_or_404(id)
 
-@app.roue('delete_post', methods=["POST"])
-def delete_post():
-    
-    return redirect(url_for('blog_index'))
+    try:
+        db.session.delete(post_to_delete)
+        db.session.commit()
+        return redirect(url_for('blog_index'))
+    except:
+        return "There was an error deleting your post!"
 
 if __name__ == "__main__":
     app.run(debug=True)

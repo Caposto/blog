@@ -15,15 +15,23 @@
 
     <table>
         <tr>
+            <th>ID</th>
             <th>Title</th>
             <th>Body</th>
+            <th>Date Created</th>
             <th>Actions</th>
         </tr>
         {% for post in posts %}
             <tr>
+                <td>{{ post.id }}</td>
                 <td>{{ post.title }}</td>
                 <td>{{ post.content }}</td>
                 <td>{{ post.date_posted.date() }}</td>
+                <td>
+                    <a href="/delete_post/{{post.id}}">Delete</a> 
+                    <br>
+                    <a href="/edit_post/{{post.id}}">Edit</a>
+                </td>
             </tr>
         {% endfor %}
     </table>
