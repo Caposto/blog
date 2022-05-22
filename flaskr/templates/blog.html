@@ -22,15 +22,15 @@
         {% for post in posts %}
             <tr>
                 <td>{{ post.title }}</td>
-                <td>{{ post.body }}</td>
-                <td>{{ post.date_created.date() }}</td>
+                <td>{{ post.content }}</td>
+                <td>{{ post.date_posted.date() }}</td>
             </tr>
         {% endfor %}
     </table>
     {% endif %}
     <br>
 
-    <form action="/add_post" method="POST">
+    <form action="/add_post" method="POST" action="{{ url_for('blog_index') }}">
         <input type="text" name="title" id ="title">
         <input type="text" name="body" id="body">
         <input type="submit" value="Add Post">
