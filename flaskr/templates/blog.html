@@ -9,7 +9,7 @@
 <body>
     <p><b>Welcome to the BLOG</b></p>
     <div class="content">
-    {% if blog_posts|length < 1 %}
+    {% if posts|length < 1 %}
     <h4 style="text-align: center">There are no posts. Create one below!</h4>
     {% else %} 
 
@@ -19,18 +19,18 @@
             <th>Body</th>
             <th>Actions</th>
         </tr>
-        {% for blog_post in blog_posts %}
+        {% for post in posts %}
             <tr>
-                <td>{{ blog_post.title }}</td>
-                <td>{{ blog_post.body }}</td>
-                <td>{{ blog_post.date_created.date() }}</td>
+                <td>{{ post.title }}</td>
+                <td>{{ post.body }}</td>
+                <td>{{ post.date_created.date() }}</td>
             </tr>
         {% endfor %}
     </table>
     {% endif %}
     <br>
 
-    <form action="/" method="POST">
+    <form action="/add_post" method="POST">
         <input type="text" name="title" id ="title">
         <input type="text" name="body" id="body">
         <input type="submit" value="Add Post">
