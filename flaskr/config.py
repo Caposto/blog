@@ -1,13 +1,14 @@
 from os import environ
 from dotenv import load_dotenv
 
+# Initialize Environment Variables
 load_dotenv()
 
 class Config(object):
     DEBUG = False
     TESTING = False
-    FLASK_APP=environ.get("FLASK_APP")
     
+    FLASK_APP=environ.get("FLASK_APP")
     SECRET_KEY = environ.get('SECRET_KEY')
     SESSION_COOKIE_NAME = environ.get('SESSION_COOKIE_NAME')
     STATIC_FOLDER = 'static'
