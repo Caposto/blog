@@ -1,12 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
+{% extends "base.html" %}
+{% block title %}Blog{% endblock %}
+
+{% block post_search %} 
+  <form class="form-inline my-2 my-lg-0">
+    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+  </form>
+{% endblock %}
+
+{% block content %}
     <p><b>Welcome to the BLOG</b></p>
     <div class="content">
     {% if posts|length < 1 %}
@@ -28,9 +30,13 @@
                 <td>{{ post.content }}</td>
                 <td>{{ post.date_posted.date() }}</td>
                 <td>
-                    <a href="/delete_post/{{post.id}}">Delete</a> 
-                    <br>
-                    <a href="/edit_post/{{post.id}}">Edit</a>
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Options
+                      </a>
+                      <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="/edit_post/{{post.id}}">Edit</a>
+                        <a class="dropdown-item" href="/delete_post/{{post.id}}">Delete</a>
+                      </div>
                 </td>
             </tr>
         {% endfor %}
@@ -43,5 +49,4 @@
         <input type="text" name="body" id="body">
         <input type="submit" value="Add Post">
     </form>
-</body>
-</html>
+{% endblock %}
