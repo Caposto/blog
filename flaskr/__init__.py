@@ -83,5 +83,9 @@ def edit_post(id):
     else:
         return render_template('update.html', post=post_to_edit)
 
+@app.route("/contact")
+def contact():
+    return render_template("contact.html")
+
 if __name__ == "__main__":
     app.run(debug=True)
