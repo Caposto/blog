@@ -8,6 +8,7 @@ class Config(object):
     DEBUG = False
     TESTING = False
     FLASK_APP=environ.get("FLASK_APP")
+    FLASK_ENV=environ.get("FLASK_ENV")
     SECRET_KEY = environ.get('SECRET_KEY')
     SESSION_COOKIE_NAME = environ.get('SESSION_COOKIE_NAME')
     STATIC_FOLDER = 'static'
@@ -23,4 +24,4 @@ class DevelopmentConfig(Config):
 
 class TestingConfig(Config):
     TESTING = True
-    FLASK_ENV=environ.get("FLASK_ENV")
+    
