@@ -1,6 +1,14 @@
+from plistlib import load
+from wsgiref import headers
 from flask import Flask, redirect, render_template, request, url_for
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
+from os import environ
+from dotenv import load_dotenv
+import json
+import requests
+
+load_dotenv()
 
 # Import configuration modules
 from flaskr.config import DevelopmentConfig
@@ -9,8 +17,17 @@ from flaskr.config import DevelopmentConfig
 app = Flask(__name__, instance_relative_config=True)
 app.config.from_object(DevelopmentConfig)
 
-# Initialize Database
+# Initialize Sqlite Database 
 db = SQLAlchemy(app)
+
+# Notion API
+notion_token = environ.get("NOTION_API_SECRET_KEY")
+notion_database_id = environ.get("NOTION_DATABASE_ID")
+
+headers = {
+    "Authorization": "Bearer " + notion_token,
+    "Notion-Version": "2022-02-22"
+}
 
 @app.before_first_request
 def create_tables():
@@ -20,6 +37,16 @@ def create_tables():
 @app.route('/')
 def index():
     return render_template("index.html")
+
+@app.route('/notion')
+def read_database():
+    read_url = f"https://api.notion.com/v1/databases/{notion_database_id}/query"
+
+    result = requests.request("POST", read_url, headers=headers)
+    status = result.status_code
+    text = result.text
+
+    return render_template("notion.html", status=status, text=text)
 
 # Class representation of a blog post
 class Blogpost(db.Model):
