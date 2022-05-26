@@ -43,17 +43,32 @@ def read_database():
     read_url = f"https://api.notion.com/v1/databases/{notion_database_id}/query"
 
     result = requests.request("POST", read_url, headers=headers)
+
     status = result.status_code
     text = result.text
+    json_load = (json.loads(text))
+    url = json_load['results'][0]['properties']['Content Link']['url']
+    title = json_load['results'][0]['properties']['Title']['title'][0]['text']['content']
+    page_status = json_load['results'][0]['properties']['Status']['select']['name']
+    page_id = json_load['results'][0]['id'] 
 
-    return render_template("notion.html", status=status, text=text)
+    return render_template("notion.html", status=status, title=title, url=url, page_status=page_status, page_id=page_id, json_load=json_load)
+
+@app.route('/notion_post/<string:title>')
+def show_post():
+    read_url = f"https://api.notion.com/v1/blocks/{block_id}/children"
+
+    result = requests.request("GET", read_url, headers=headers)
+    return result
 
 # Class representation of a blog post
 class Blogpost(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(50))
+    content_link = db.Column(db.String(100))
     content = db.Column(db.Text)
     date_posted = db.Column(db.DateTime)
+    date_updated = db.Column(db.DateTime)
 
     def __init__(self, title, content, date_posted=datetime.now()):
         self.title = title

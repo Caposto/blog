@@ -3,5 +3,9 @@
 
 {% block content %}
     <p>Status: {{status}}</p>
-    <p>Content: {{text}}</p>
+    {% if page_status == 'Active' %}
+    <p><a href="{{url}}">{{title}}</a></p>
+    {% endif %}
+    <p>{{page_id}}</p>
+
 {% endblock %}
