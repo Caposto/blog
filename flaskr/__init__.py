@@ -1,4 +1,3 @@
-from plistlib import load
 from wsgiref import headers
 from flask import Flask, redirect, render_template, request, url_for
 from flask_sqlalchemy import SQLAlchemy
@@ -52,7 +51,12 @@ def read_database():
     page_status = json_load['results'][0]['properties']['Status']['select']['name']
     page_id = json_load['results'][0]['id'] 
 
-    return render_template("notion.html", status=status, title=title, url=url, page_status=page_status, page_id=page_id, json_load=json_load)
+    pg_url = f"https://api.notion.com/v1/pages/{page_id}"
+    pg_result = requests.request("GET", pg_url, headers=headers)
+    pg_text = pg_result.text
+    # Add try block
+
+    return render_template("notion.html", status=status, title=title, url=url, page_status=page_status, pg_text=pg_text, json_load=json_load)
 
 @app.route('/notion_post/<string:title>')
 def show_post():
