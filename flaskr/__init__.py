@@ -63,7 +63,7 @@ def read_database():
             post_info['url'] = url
             post_info['Title'] = title
             post_info['Status'] = post_status
-            post_info['PageID'] = page_id
+            post_info['Page_json'] = get_page(page_id)
 
             posts.append(post_info)
 
@@ -71,6 +71,17 @@ def read_database():
 
     else:
         return "The blog is currently unavailable, please come back soon!"
+
+def get_page(page_id):
+    read_url = f"https://api.notion.com/v1/pages/{page_id}"
+
+    result = requests.request("GET", read_url, headers=headers)
+    status = result.status_code
+    if status == 200:
+        info = result.text
+        return info
+    else:
+        return "Error connecting to page"
 
 @app.route("/contact")
 def contact():
