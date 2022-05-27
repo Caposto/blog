@@ -42,37 +42,50 @@ def read_database():
     read_url = f"https://api.notion.com/v1/databases/{notion_database_id}/query"
 
     result = requests.request("POST", read_url, headers=headers)
-
     status = result.status_code
-    text = result.text
-    json_load = (json.loads(text))
-    url = json_load['results'][0]['properties']['Content Link']['url']
-    title = json_load['results'][0]['properties']['Title']['title'][0]['text']['content']
-    page_status = json_load['results'][0]['properties']['Status']['select']['name']
-    page_id = json_load['results'][0]['id'] 
 
-    pg_url = f"https://api.notion.com/v1/pages/{page_id}"
-    pg_result = requests.request("GET", pg_url, headers=headers)
-    pg_text = pg_result.text
-    # Add try block
+    if status == 200:
+        text = result.text
+        posts_json = (json.loads(text))
+        posts = []
 
-    return render_template("notion.html", status=status, title=title, url=url, page_status=page_status, pg_text=pg_text, json_load=json_load)
+        for post_json in posts_json['results']:
+            post_info = {}
+            
+            url = post_json['properties']['Content Link']['url']
+            title = post_json['properties']['Title']['title'][0]['text']['content']
+            post_status = post_json['properties']['Status']['select']['name']
 
-@app.route('/notion_post/<string:title>')
-def show_post():
-    read_url = f"https://api.notion.com/v1/blocks/{block_id}/children"
+            post_info['url'] = url
+            post_info['Title'] = title
+            post_info['Status'] = post_status
 
-    result = requests.request("GET", read_url, headers=headers)
-    return result
+            posts.append(post_info)
+
+        return render_template("notion.html", posts=posts)
+
+    else:
+        return "The blog is currently unavailable, please come back soon!"
+
+class Notionpost(db.model):
+    id = db.Column(db.String(100), primary_key=True)
+    title = db.Column(db.String(200))
+    url = db.Column(db.String(200))
+    status = db.Column(db.Boolean)
+    date_posted = db.Column(db.String(200))
+
+    def __init__(self, title, url, status, date_posted):
+        self.title = title
+        self.url = url
+        self.status = status
+        self.date_posted = date_posted
 
 # Class representation of a blog post
 class Blogpost(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(50))
-    content_link = db.Column(db.String(100))
     content = db.Column(db.Text)
     date_posted = db.Column(db.DateTime)
-    date_updated = db.Column(db.DateTime)
 
     def __init__(self, title, content, date_posted=datetime.now()):
         self.title = title

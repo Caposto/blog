@@ -2,10 +2,15 @@
 {% block title %}Notion API Test{% endblock %}
 
 {% block content %}
-    <p>Status: {{status}}</p>
-    {% if page_status == 'Active' %}
-    <p><a href="{{url}}">{{title}}</a></p>
-    {% endif %}
-    <p>{{pg_text}}</p>
+{% if posts|length < 1 %}
+<h4 style="text-align: center">There are no posts. Create one in Notion!</h4>
+{% else %} 
+    {% for post in posts %}
+        {% if post['Status'] == "Active" %}
+            <a href="{{post['url']}}">{{post['Title']}}</a>
+            <br>
+        {% endif %}
+    {% endfor %}
+{% endif %}
 
 {% endblock %}
