@@ -58,10 +58,12 @@ def read_database():
             url = post_json['properties']['Content Link']['url']
             title = post_json['properties']['Title']['title'][0]['text']['content']
             post_status = post_json['properties']['Status']['select']['name']
+            page_id = post_json['id']
 
             post_info['url'] = url
             post_info['Title'] = title
             post_info['Status'] = post_status
+            post_info['PageID'] = page_id
 
             posts.append(post_info)
 
@@ -69,19 +71,6 @@ def read_database():
 
     else:
         return "The blog is currently unavailable, please come back soon!"
-
-class Notionpost(db.Model):
-    id = db.Column(db.String(100), primary_key=True)
-    title = db.Column(db.String(200))
-    url = db.Column(db.String(200))
-    status = db.Column(db.Boolean)
-    date_posted = db.Column(db.String(200))
-
-    def __init__(self, title, url, status, date_posted):
-        self.title = title
-        self.url = url
-        self.status = status
-        self.date_posted = date_posted
 
 @app.route("/contact")
 def contact():
