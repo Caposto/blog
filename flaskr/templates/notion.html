@@ -9,9 +9,9 @@
         {% if post['Status'] == "Active" %}
             <a href="{{post['url']}}">{{post['Title']}}</a>
             <br>
-            
+            <p>{{post['Block']}}</p>
+            <br>
         {% endif %}
-        <p>{{post['Page_json']}}</p>
     {% endfor %}
 {% endif %}
 
