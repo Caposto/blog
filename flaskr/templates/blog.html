@@ -6,11 +6,10 @@
 <h4 style="text-align: center">There are no posts. Create one in Notion!</h4>
 {% else %} 
     {% for post in posts %}
-        {% if post['Status'] == "Active" %}
-            <a href="{{post['url']}}">{{post['Title']}}</a>
+        {% if post['status'] == "Active" %}
+            <p><a href="{{post['url']}}">{{post['title']}}</a></p>
             <br>
-            <p>{{post['Block']}}</p>
-            <br>
+            {{json}}
         {% endif %}
     {% endfor %}
 {% endif %}
