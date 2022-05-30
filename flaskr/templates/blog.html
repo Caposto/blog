@@ -7,7 +7,7 @@
 {% else %} 
     {% for post in posts %}
         {% if post['status'] == "Active" %}
-            <p><a href="{{post['url']}}">{{post['title']}}</a></p>
+            <p><a href="/blog/{{post['id']}}">{{post['title']}}</a></p>
             <br>
             {{json}}
         {% endif %}
