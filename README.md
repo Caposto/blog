@@ -16,3 +16,8 @@ Goals
 * Get comfortable using Git
 * Learn how python is used in web development
 * Learn how to write tests for web development
+
+Notion API Resources
+* https://www.youtube.com/watch?v=sdn1HgxLwEg 
+* https://developers.notion.com/reference/intro
+* https://python.plainenglish.io/how-to-use-python-with-notion-api-e6221b653310

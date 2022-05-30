@@ -1,52 +1,16 @@
 {% extends "base.html" %}
-{% block title %}Blog{% endblock %}
-
-{% block post_search %} 
-  <form class="form-inline my-2 my-lg-0">
-    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-  </form>
-{% endblock %}
+{% block title %}Notion API Test{% endblock %}
 
 {% block content %}
-    <p><b>Welcome to the BLOG</b></p>
-    <div class="content">
-    {% if posts|length < 1 %}
-    <h4 style="text-align: center">There are no posts. Create one below!</h4>
-    {% else %} 
+{% if posts|length < 1 %}
+<h4 style="text-align: center">There are no posts. Create one in Notion!</h4>
+{% else %} 
+    {% for post in posts %}
+        <a href="{{post['url']}}"><h1>{{post['title']}}</h1></a>
+        <p><i>{{post['category']}}</i></p>
+        <p>{{post['description']}}</p>
+        <br>
+    {% endfor %}
+{% endif %}
 
-    <table>
-        <tr>
-            <th>ID</th>
-            <th>Title</th>
-            <th>Body</th>
-            <th>Date Created</th>
-            <th>Actions</th>
-        </tr>
-        {% for post in posts %}
-            <tr>
-                <td>{{ post.id }}</td>
-                <td>{{ post.title }}</td>
-                <td>{{ post.content }}</td>
-                <td>{{ post.date_posted.date() }}</td>
-                <td>
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Options
-                      </a>
-                      <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="/edit_post/{{post.id}}">Edit</a>
-                        <a class="dropdown-item" href="/delete_post/{{post.id}}">Delete</a>
-                      </div>
-                </td>
-            </tr>
-        {% endfor %}
-    </table>
-    {% endif %}
-    <br>
-
-    <form action="/add_post" method="POST">
-        <input type="text" name="title" id ="title">
-        <input type="text" name="body" id="body">
-        <input type="submit" value="Add Post">
-    </form>
 {% endblock %}
