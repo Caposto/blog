@@ -7,7 +7,9 @@
 {% else %} 
     {% for post in posts %}
         <a href="{{post['url']}}"><h1>{{post['title']}}</h1></a>
+        <p><i>{{post['category']}}</i></p>
         <p>{{post['description']}}</p>
+        <br>
     {% endfor %}
 {% endif %}
 

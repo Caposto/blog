@@ -1,5 +1,0 @@
-{% macro style_text(text_props) %}
-    <link rel="stylesheet" href="{{ url_for('static', filename='text.css') }}">
-    <p class="{{text_props['style']}}">{{text_props['text']}}</p>
-    {{text_props['style']}}
-{% endmacro %}
