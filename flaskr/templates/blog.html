@@ -6,7 +6,7 @@
 <h4 style="text-align: center">There are no posts. Create one in Notion!</h4>
 {% else %} 
     {% for post in posts %}
-        <a href="/blog/{{post['id']}}"><h1>{{post['title']}}</h1></a>
+        <a href="{{post['url']}}"><h1>{{post['title']}}</h1></a>
         <p>{{post['description']}}</p>
     {% endfor %}
 {% endif %}

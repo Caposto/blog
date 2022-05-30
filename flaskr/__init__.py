@@ -4,11 +4,9 @@ from flask import Flask, render_template
 from flask_caching import Cache
 from os import environ
 from dotenv import load_dotenv
-from sqlalchemy import false
 from flaskr.notion import get_database, get_page, get_blocks
 from flask_cors import CORS, cross_origin
 import json
-import requests
 
 load_dotenv()
 
@@ -39,13 +37,6 @@ def index():
 @cache.cached(timeout=30)
 @cross_origin()
 def read_database():
-    #read_url = f"https://api.notion.com/v1/databases/{notion_database_id}/query"
-    #result = requests.request("POST", read_url, headers=headers)
-    #status = result.status_code
-
-    
-    # if status == 200:
-        #text = result.text
     text = get_database(notion_database_id, headers)
     posts_json = (json.loads(text))
     posts = []
