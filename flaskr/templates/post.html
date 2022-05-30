@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% from "_macros.html" import style_text %}
+
+{% block content %} 
+    {% for text in texts %} 
+        {{ style_text(text) }}
+    {% endfor %}
+{% endblock %}

@@ -4,6 +4,7 @@ from flask import Flask, render_template
 from flask_caching import Cache
 from os import environ
 from dotenv import load_dotenv
+from sqlalchemy import false
 from flaskr.notion import get_database, get_page, get_blocks
 from flask_cors import CORS, cross_origin
 import json
@@ -58,13 +59,15 @@ def read_database():
             title = post_json['properties']['Title']['title'][0]['text']['content']
             category = post_json['properties']['Category']['select']['name']
             page_id = post_json['id']
+            description = post_json['properties']['Description']['rich_text'][0]['text']['content']
 
             post_info['status'] = post_status
             post_info['url'] = url
             post_info['title'] = title
             post_info['category'] = category
+            post_info['description'] = description
             post_info['id'] = page_id
-            
+
             #Easy way to create a json with the required data
             #page_data = get_blocks(page_id, headers)
             #j_data = page_data.json()            
@@ -73,22 +76,60 @@ def read_database():
 
             posts.append(post_info)
     return render_template("blog.html", posts=posts)
-    #else:
-    #    return "The blog is currently unavailable, please come back soon!"
 
 @app.route('/blog/<id>')
 def render_page(id):
     block_properties = get_blocks(id, headers)
-    rich_text = block_properties['results'][0]["paragraph"]["rich_text"]
-    annot = {"bold": "", "italic": "", "strikethrough": "", "underline": "", "code": "", "color": ""}
+    rich_text = block_properties["results"][0]["paragraph"]["rich_text"]
     text_arr = []
     for r in rich_text:
+        content = r['text']['content']
         annotations = r["annotations"]
-        text_arr.append(r["plain_text"] + str(annotations))
+        text_obj = Text(content, str(annotations['bold']), str(annotations['italic']), 
+                        str(annotations['strikethrough']), str(annotations['underline']), 
+                        str(annotations['code']), annotations['color'])
+        text_arr.append(text_obj.get_text_props())
     
     # for block in page_properties: get_block_id and pass into a dictionary block_ids where block_id: type of block (i.e "paragraph")
     # for block_id in block_ids: render_block(block_id, block_ids[block_id])
-    return " ".join(text_arr)
+    return render_template("post.html", texts=text_arr, json=block_properties)
+
+class Text():
+    def __init__(self, content,bold, italic, strikethrough, underline, code, color="default"):
+        self.content = content
+        self.bold = bold
+        self.italic = italic
+        self.strikethrough = strikethrough
+        self.underline = underline
+        self.code = code
+        self.color = color
+    
+    def __repr__(self):
+        # styles = self.get_text()
+        # styled_content = {'text': self.content, 'style': styles}
+        return self.content
+    
+    def get_text_props(self):
+        props = {'text': self.content, 'style': self.get_style()}
+        return props
+
+    # Return text + dictionary containing stylesheets
+    # Class names: bold, code, italic, strikethrough, underline
+    # FIXME: json returns lowercase booleans
+    def get_style(self):
+       styles = ""
+       if self.bold == "True":
+           " ".join((styles, "bold"))
+       if self.italic == "True":
+           " ".join((styles, "italic"))
+       if self.strikethrough == "True":
+           " ".join((styles, "strikethrough"))
+       if self.underline == "True":
+           " ".join((styles, "underline"))
+       if self.code == "True":
+           " ".join((styles, "code"))    
+       return styles
+    
 
 @app.route("/contact")
 def contact():
