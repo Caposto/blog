@@ -5,6 +5,7 @@ from flask_caching import Cache
 from os import environ
 from dotenv import load_dotenv
 from flaskr.notion import get_database, get_page, get_blocks
+from flask_cors import CORS, cross_origin
 import json
 import requests
 
@@ -17,6 +18,7 @@ from flaskr.config import DevelopmentConfig
 app = Flask(__name__, instance_relative_config=True)
 app.config.from_object(DevelopmentConfig)
 cache = Cache(app)
+cor = CORS(app)
 
 # Notion API Tokens
 notion_token = environ.get("NOTION_API_SECRET_KEY")
@@ -34,6 +36,7 @@ def index():
 
 @app.route('/blog')
 @cache.cached(timeout=30)
+@cross_origin()
 def read_database():
     #read_url = f"https://api.notion.com/v1/databases/{notion_database_id}/query"
     #result = requests.request("POST", read_url, headers=headers)
@@ -77,10 +80,11 @@ def read_database():
 def render_page(id):
     block_properties = get_blocks(id, headers)
     rich_text = block_properties['results'][0]["paragraph"]["rich_text"]
-
+    annot = {"bold": "", "italic": "", "strikethrough": "", "underline": "", "code": "", "color": ""}
     text_arr = []
     for r in rich_text:
-        text_arr.append(r["plain_text"])
+        annotations = r["annotations"]
+        text_arr.append(r["plain_text"] + str(annotations))
     
     # for block in page_properties: get_block_id and pass into a dictionary block_ids where block_id: type of block (i.e "paragraph")
     # for block_id in block_ids: render_block(block_id, block_ids[block_id])

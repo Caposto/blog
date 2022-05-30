@@ -9,6 +9,9 @@
         {% if post['status'] == "Active" %}
             <p><a href="/blog/{{post['id']}}">{{post['title']}}</a></p>
             <br>
+            <object data="{{post['url']}}" width="600" height="400">
+                <embed src="{{post['url']}}" width="600" height="400"></embed>
+            </object>
             {{json}}
         {% endif %}
     {% endfor %}

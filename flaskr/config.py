@@ -25,6 +25,8 @@ class DevelopmentConfig(Config):
     CACHE_TYPE = "SimpleCache"
     CACHE_DEFAULT_TIMEOUT = 300
 
+    CORS_HEADERS = 'Content-Type'
+
 class TestingConfig(Config):
     TESTING = True
     
