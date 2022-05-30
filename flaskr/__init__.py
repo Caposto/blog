@@ -85,9 +85,9 @@ def render_page(id):
     for r in rich_text:
         content = r['text']['content']
         annotations = r["annotations"]
-        text_obj = Text(content, str(annotations['bold']), str(annotations['italic']), 
-                        str(annotations['strikethrough']), str(annotations['underline']), 
-                        str(annotations['code']), annotations['color'])
+        text_obj = Text(content, annotations['bold'], annotations['italic'], 
+                        annotations['strikethrough'], annotations['underline'], 
+                        annotations['code'], annotations['color'])
         text_arr.append(text_obj.get_text_props())
     
     # for block in page_properties: get_block_id and pass into a dictionary block_ids where block_id: type of block (i.e "paragraph")
@@ -95,7 +95,7 @@ def render_page(id):
     return render_template("post.html", texts=text_arr, json=block_properties)
 
 class Text():
-    def __init__(self, content,bold, italic, strikethrough, underline, code, color="default"):
+    def __init__(self, content, bold, italic, strikethrough, underline, code, color="default"):
         self.content = content
         self.bold = bold
         self.italic = italic
@@ -107,7 +107,7 @@ class Text():
     def __repr__(self):
         # styles = self.get_text()
         # styled_content = {'text': self.content, 'style': styles}
-        return self.content
+        return self.content + str(self.bold + self.italic + self.strikethrough + self.underline + self.code)
     
     def get_text_props(self):
         props = {'text': self.content, 'style': self.get_style()}
@@ -118,16 +118,18 @@ class Text():
     # FIXME: json returns lowercase booleans
     def get_style(self):
        styles = ""
-       if self.bold == "True":
+       if True:
            " ".join((styles, "bold"))
-       if self.italic == "True":
+       if self.italic:
            " ".join((styles, "italic"))
-       if self.strikethrough == "True":
+       if self.strikethrough:
            " ".join((styles, "strikethrough"))
-       if self.underline == "True":
+       if self.underline:
            " ".join((styles, "underline"))
-       if self.code == "True":
-           " ".join((styles, "code"))    
+       if self.code:
+           " ".join((styles, "code"))  
+       else:
+           return self.content  
        return styles
     
 

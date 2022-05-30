@@ -3,6 +3,7 @@
 
 {% block content %} 
     {% for text in texts %} 
-        {{ style_text(text) }}
+        {{ text['text'] }}
+        {{ text['style'] }}
     {% endfor %}
 {% endblock %}
