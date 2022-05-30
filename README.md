@@ -1,23 +1,4 @@
 # Personal Portfolio Website/Blog
-This project was built in Flask and serves not only as a portfolio/blog but also as my introduction to web development. 
+This project was built in Flask and serves as an attempt at a portfolio website/blog.
 
-Features of the site will include:
- * Blog that utilizes the Notion API to make writing/editing posts easier
- * A functional SQL database for blog posts (POSTGRE or MySQL or SQLite TBD)
- * Comment functionality for users
- * Optional login/register system for email notifications about new posts
- * Contact box that will allow viewers to write emails directly to me from the site
-
-Goals
-* Learn HTML, CSS, Javascript basics
-* Understand capabilites of Flask framework 
-* Learn SQL basics
-* Learn Basic Security Practices
-* Get comfortable using Git
-* Learn how python is used in web development
-* Learn how to write tests for web development
-
-Notion API Resources
-* https://www.youtube.com/watch?v=sdn1HgxLwEg 
-* https://developers.notion.com/reference/intro
-* https://python.plainenglish.io/how-to-use-python-with-notion-api-e6221b653310
+In this project the Notion API functions as a Content-Management-System (CMS) for blog posts. The flask app parses blog properties from a notion database and uses them to display and link a blog post on the site. 
